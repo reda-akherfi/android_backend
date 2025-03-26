@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      routes:
+        # Public Auth Service Routes (No Authentication Required)
+        - id: auth-service-public
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/register,/api/auth/login,/api/auth/verify
+
+        # Notes Service - Protected Routes
+        - id: notes-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/notes/**
+
+
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+    com.omnedu.gateway.filter: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - gateway/routes  # Allow these endpoints to be exposed
+    gateway:
+      access: read  # Enable Gateway actuator for routes

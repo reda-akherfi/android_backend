@@ -9,6 +9,16 @@
             "projectName": "note-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CloudsrvApplication<cloudsrv>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.omnedu.cloudsrv.CloudsrvApplication",
+            "projectName": "cloudsrv",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
