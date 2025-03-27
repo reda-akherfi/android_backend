@@ -70,6 +70,27 @@
             "projectName": "document-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-TimerServiceApplication<timer-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.omnedu.timer_service.TimerServiceApplication",
+            "projectName": "timer-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=63199 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=timer-service"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-TaskServiceApplication<task-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.omnedu.task_service.TaskServiceApplication",
+            "projectName": "task-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

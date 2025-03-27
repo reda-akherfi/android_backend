@@ -26,6 +26,8 @@ public class SecurityConfig {
                 .pathMatchers("/api/notes/**").permitAll()  // Require authentication for notes service
                 .pathMatchers("/api/videos/**").permitAll()  // Require authentication for videos service
                 .pathMatchers("/api/documents/**").permitAll()  // Require authentication for document service
+                .pathMatchers("/api/timer/**").permitAll()  // Require authentication for timer service
+                .pathMatchers("/api/tasks/**").permitAll()  // Require authentication for tasks service
                 .anyExchange().authenticated()
             );
         return http.build();

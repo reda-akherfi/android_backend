@@ -28,6 +28,20 @@ spring:
           uri: http://localhost:8084
           predicates:
             - Path=/api/documents/**
+        
+        # timer Service - Protected Routes
+        - id: timer-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/timer/**
+        
+        # tasks Service - Protected Routes
+        - id: tasks-service
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/tasks/**
+
+
 
 
 
