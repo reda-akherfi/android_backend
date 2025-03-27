@@ -60,6 +60,16 @@
             "projectName": "videoservice",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DocumentServiceApplication<document-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.omnedu.document_service.DocumentServiceApplication",
+            "projectName": "document-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
