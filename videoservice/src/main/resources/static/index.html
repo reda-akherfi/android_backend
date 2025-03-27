@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecteur YouTube</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Lecteur YouTube</h1>
+    <input type="text" id="videoTitle" placeholder="Entrez le titre de la vidéo">
+    <input type="text" id="videoUrl" placeholder="Entrez l'URL de la vidéo YouTube">
+    <button onclick="loadVideo()">Charger la vidéo</button>
+    <button onclick="loadVideoList()">Afficher les vidéos enregistrées</button>
+  </div>
+
+  <div id="videoContainer" class="video-container">
+    <div id="videoWindow" class="video-window">
+      <span class="close-btn" onclick="closeVideo()">×</span>
+      <iframe id="videoPlayer" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div id="videoListContainer" class="video-list-container">
+    <h2>Vidéos enregistrées</h2>
+    <ul id="videoList"></ul>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>

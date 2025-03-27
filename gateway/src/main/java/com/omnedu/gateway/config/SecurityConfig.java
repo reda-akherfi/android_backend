@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .pathMatchers("/api/auth/register", "/api/auth/login", "/api/auth/verify").permitAll()
                 .pathMatchers("/actuator/**").permitAll()  // Allow actuator routes without authentication
                 .pathMatchers("/api/notes/**").permitAll()  // Require authentication for notes service
+                .pathMatchers("/api/videos/**").permitAll()  // Require authentication for videos service
                 .anyExchange().authenticated()
             );
         return http.build();
