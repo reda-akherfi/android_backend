@@ -26,6 +26,7 @@ public class TimerService {
     private final TimerRepository timerRepository;
     private final TaskServiceClient taskServiceClient;
 
+    @Transactional
     public TimerResponseDTO createTimer(TimerRequestDTO request, String userId) {
         // Validate tasks exist and belong to user
         if (request.getTaskIds() != null && !request.getTaskIds().isEmpty()) {
@@ -39,6 +40,7 @@ public class TimerService {
         timer.setUserId(userId);
         timer.setTitle(request.getTitle());
         timer.setTimerType(request.getTimerType());
+        timer.setIsBreak(request.getIsBreak() != null ? request.getIsBreak() : false);
         
         if (request.getTaskIds() != null && !request.getTaskIds().isEmpty()) {
             timer.setTaskIds(String.join(",", request.getTaskIds().stream()
@@ -46,19 +48,13 @@ public class TimerService {
                     .collect(Collectors.toList())));
         }
 
-        
-        timer.setUserId(userId);
-        timer.setTitle(request.getTitle());
-        timer.setTimerType(request.getTimerType());
-
+        // Set initial state based on timer type
         switch (request.getTimerType()) {
             case POMODORO:
-                timer.setDurationSeconds(request.getPomodoroWorkDuration());
-                timer.setRemainingSeconds(request.getPomodoroWorkDuration());
-                timer.setPomodoroWorkDuration(request.getPomodoroWorkDuration());
-                timer.setPomodoroBreakDuration(request.getPomodoroBreakDuration());
-                break;
             case COUNTDOWN:
+                if (request.getDurationSeconds() == null) {
+                    throw new IllegalArgumentException("Duration is required for this timer type");
+                }
                 timer.setDurationSeconds(request.getDurationSeconds());
                 timer.setRemainingSeconds(request.getDurationSeconds());
                 break;
@@ -153,33 +149,31 @@ public class TimerService {
 
         if (!timer.getIsCompleted()) {
             timer = updateRemainingTime(timer);
-
-            // Handle Pomodoro round completion
-            if (timer.getTimerType() == Timer.TimerType.POMODORO &&
-                    timer.getRemainingSeconds() <= 0) {
-                timer.setPomodoroRoundsCompleted(timer.getPomodoroRoundsCompleted() + 1);
-
-                // Switch between work and break
-                if (timer.getTitle() == null || timer.getTitle().contains("Work")) {
-                    // Start break
-                    timer.setTitle("Pomodoro Break");
-                    timer.setDurationSeconds(timer.getPomodoroBreakDuration());
-                    timer.setRemainingSeconds(timer.getPomodoroBreakDuration());
-                    timer.setStartTime(LocalDateTime.now());
-                    timer.setIsCompleted(false);
-                } else {
-                    // Work session completed
-                    timer.setIsCompleted(true);
-                }
-            } else {
-                timer.setIsCompleted(true);
-            }
-
+            timer.setIsCompleted(true);
             timer.setEndTime(LocalDateTime.now());
             timer = timerRepository.save(timer);
         }
 
         return mapToDTO(timer);
+    }
+
+    @Transactional
+    public void deleteTimer(Long id, String userId) {
+        Timer timer = timerRepository.findById(id)
+                .orElseThrow(() -> new TimerNotFoundException("Timer not found with id: " + id));
+
+        if (!timer.getUserId().equals(userId)) {
+            throw new TimerNotFoundException("Timer not found with id: " + id);
+        }
+
+        timerRepository.delete(timer);
+    }
+
+    public List<TimerResponseDTO> getTimersForTask(Long taskId, String userId) {
+        return timerRepository.findByUserIdAndTaskIdsContaining(userId, taskId.toString()).stream()
+                .map(this::updateRemainingTime)
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     private Timer updateRemainingTime(Timer timer) {
@@ -219,9 +213,7 @@ public class TimerService {
         dto.setEndTime(timer.getEndTime());
         dto.setIsPaused(timer.getIsPaused());
         dto.setIsCompleted(timer.getIsCompleted());
-        dto.setPomodoroWorkDuration(timer.getPomodoroWorkDuration());
-        dto.setPomodoroBreakDuration(timer.getPomodoroBreakDuration());
-        dto.setPomodoroRoundsCompleted(timer.getPomodoroRoundsCompleted());
+        dto.setIsBreak(timer.getIsBreak());
         dto.setCreatedAt(timer.getCreatedAt());
         dto.setUpdatedAt(timer.getUpdatedAt());
 
@@ -233,14 +225,6 @@ public class TimerService {
             dto.setStatus("RUNNING");
         }
 
-        if (timer.getTimerType() == Timer.TimerType.POMODORO) {
-            if (timer.getTitle() != null && timer.getTitle().contains("Break")) {
-                dto.setCurrentRound(timer.getPomodoroRoundsCompleted() + 1);
-            } else {
-                dto.setCurrentRound(timer.getPomodoroRoundsCompleted());
-            }
-        }
-
         // Add task IDs to response
         if (timer.getTaskIds() != null && !timer.getTaskIds().isEmpty()) {
             dto.setTaskIds(Arrays.stream(timer.getTaskIds().split(","))
@@ -249,27 +233,5 @@ public class TimerService {
         }
 
         return dto;
-    }
-
-    @Transactional
-    public void deleteTimer(Long id, String userId) {
-        Timer timer = timerRepository.findById(id)
-                .orElseThrow(() -> new TimerNotFoundException("Timer not found with id: " + id));
-
-        if (!timer.getUserId().equals(userId)) {
-            throw new TimerNotFoundException("Timer not found with id: " + id);
-        }
-
-        timerRepository.delete(timer);
-
-        
-    }
-
-    // Add this new method
-    public List<TimerResponseDTO> getTimersForTask(Long taskId, String userId) {
-        return timerRepository.findByUserIdAndTaskIdsContaining(userId, taskId.toString()).stream()
-                .map(this::updateRemainingTime)
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
     }
 }

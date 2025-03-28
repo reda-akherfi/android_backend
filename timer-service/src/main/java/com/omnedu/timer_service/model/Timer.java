@@ -24,10 +24,10 @@ public class Timer {
     @Column(name = "timer_type", nullable = false)
     private TimerType timerType;
 
-    @Column(name = "duration_seconds", nullable = false)
+    @Column(name = "duration_seconds")
     private Integer durationSeconds;
 
-    @Column(name = "remaining_seconds", nullable = false)
+    @Column(name = "remaining_seconds")
     private Integer remainingSeconds;
 
     @Column(name = "start_time")
@@ -42,15 +42,8 @@ public class Timer {
     @Column(name = "is_completed")
     private Boolean isCompleted = false;
 
-    // Pomodoro-specific fields
-    @Column(name = "pomodoro_work_duration")
-    private Integer pomodoroWorkDuration = 1500; // 25 minutes
-
-    @Column(name = "pomodoro_break_duration")
-    private Integer pomodoroBreakDuration = 300; // 5 minutes
-
-    @Column(name = "pomodoro_rounds_completed")
-    private Integer pomodoroRoundsCompleted = 0;
+    @Column(name = "is_break")
+    private Boolean isBreak = false; // Flag for break timers
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

@@ -2,7 +2,6 @@ package com.omnedu.timer_service.dto;
 
 import com.omnedu.timer_service.model.Timer.TimerType;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,11 +18,8 @@ public class TimerResponseDTO {
     private LocalDateTime endTime;
     private Boolean isPaused;
     private Boolean isCompleted;
-    private Integer pomodoroWorkDuration;
-    private Integer pomodoroBreakDuration;
-    private Integer pomodoroRoundsCompleted;
+    private Boolean isBreak;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String status; // "RUNNING", "PAUSED", "COMPLETED"
-    private Integer currentRound; // For pomodoro
 }
