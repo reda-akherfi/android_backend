@@ -17,4 +17,6 @@ public class DocumentEntity {
     private byte[] content;
     private LocalDateTime uploadDate;
     private String description;
+    private String userId; // Added for user ownership
+    private String taskIds; // Added for task association (comma-separated)
 }

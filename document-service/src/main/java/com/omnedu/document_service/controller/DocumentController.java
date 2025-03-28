@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/documents")
 @RequiredArgsConstructor
@@ -23,14 +22,22 @@ public class DocumentController {
     private final HttpServletRequest request;
 
     @PostMapping
-    public ResponseEntity<DocumentResponseDTO> uploadDocument(@RequestParam("file") MultipartFile file) {
-        DocumentResponseDTO response = documentService.store(file, getBaseUrl());
+    public ResponseEntity<DocumentResponseDTO> uploadDocument(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "taskIds", required = false) List<Long> taskIds,
+            @RequestHeader("X-User-Id") String userId) {
+        DocumentResponseDTO response = documentService.store(file, getBaseUrl(), userId, taskIds);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ByteArrayResource> downloadDocument(@PathVariable String id) {
+    public ResponseEntity<ByteArrayResource> downloadDocument(
+            @PathVariable String id,
+            @RequestHeader("X-User-Id") String userId) {
         DocumentResponseDTO doc = documentService.getDocument(id, getBaseUrl());
+        if (!doc.getUserId().equals(userId)) {
+            return ResponseEntity.notFound().build();
+        }
         
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(doc.getContentType()))
@@ -39,13 +46,23 @@ public class DocumentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DocumentResponseDTO>> getAllDocuments() {
-        return ResponseEntity.ok(documentService.getAllDocuments(getBaseUrl()));
+    public ResponseEntity<List<DocumentResponseDTO>> getUserDocuments(
+            @RequestHeader("X-User-Id") String userId) {
+        return ResponseEntity.ok(documentService.getAllDocuments(getBaseUrl(), userId));
+    }
+
+    @GetMapping("/task/{taskId}")
+    public ResponseEntity<List<DocumentResponseDTO>> getDocumentsForTask(
+            @PathVariable Long taskId,
+            @RequestHeader("X-User-Id") String userId) {
+        return ResponseEntity.ok(documentService.getDocumentsForTask(taskId, userId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDocument(@PathVariable String id) {
-        documentService.deleteDocument(id);
+    public ResponseEntity<Void> deleteDocument(
+            @PathVariable String id,
+            @RequestHeader("X-User-Id") String userId) {
+        documentService.deleteDocument(id, userId);
         return ResponseEntity.noContent().build();
     }
 
