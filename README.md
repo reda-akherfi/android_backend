@@ -8,3 +8,7 @@ docker run -d --name mongodb -p 27017:27017 `
   -v mongodb_data:/data/db `
   mongo:latest
 ```
+
+```powershell
+ docker exec -it web-dev-backend-mysql mysql -u root -p
+ ```

@@ -15,6 +15,9 @@ public class Timer {
     @Column(name = "user_id", nullable = false)
     private String userId;
 
+    @Column(name = "task_ids")
+    private String taskIds; // Comma-separated list of task IDs
+
     private String title;
 
     @Enumerated(EnumType.STRING)

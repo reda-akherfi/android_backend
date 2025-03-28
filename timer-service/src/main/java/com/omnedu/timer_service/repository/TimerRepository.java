@@ -10,4 +10,5 @@ import java.util.List;
 public interface TimerRepository extends JpaRepository<Timer, Long> {
     List<Timer> findByUserId(String userId);
     List<Timer> findByUserIdAndIsCompleted(String userId, Boolean isCompleted);
+    List<Timer> findByUserIdAndTaskIdsContaining(String userId, String taskId);
 }

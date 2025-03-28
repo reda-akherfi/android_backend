@@ -108,4 +108,14 @@ public TaskResponseDTO updateTask(Long id, TaskRequestDTO request, String userId
                 .map(TaskResponseDTO::new)
                 .collect(Collectors.toList());
     }
+
+    public List<TaskResponseDTO> getTasksByIds(List<Long> ids, String userId) {
+        List<Task> tasks = taskRepository.findByIdInAndUserId(ids, userId);
+        if (tasks.size() != ids.size()) {
+            throw new TaskNotFoundException("One or more tasks not found");
+        }
+        return tasks.stream()
+                .map(TaskResponseDTO::new)
+                .collect(Collectors.toList());
+    }
 }

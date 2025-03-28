@@ -1,5 +1,7 @@
 package com.omnedu.timer_service.dto;
 
+import java.util.List;
+
 import com.omnedu.timer_service.model.Timer.TimerType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -14,6 +16,8 @@ public class TimerRequestDTO {
     @Positive(message = "Duration must be a positive number")
     private Integer durationSeconds; // Required for COUNTDOWN, ignored for others
 
+    private List<Long> taskIds;
+    
     private String title;
 
     // Pomodoro-specific fields with default values

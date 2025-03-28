@@ -57,4 +57,11 @@ public class TimerController {
         timerService.deleteTimer(id, userId);
     }
 
+    @GetMapping("/task/{taskId}")
+    public List<TimerResponseDTO> getTimersForTask(
+            @PathVariable Long taskId,
+            @RequestHeader("X-User-Id") String userId) {
+        return timerService.getTimersForTask(taskId, userId);
+    }
+
 }

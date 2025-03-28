@@ -1,27 +1,52 @@
 package com.omnedu.timer_service.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.omnedu.timer_service.client.TaskServiceClient;
+import com.omnedu.timer_service.dto.TaskDTO;
 import com.omnedu.timer_service.dto.TimerRequestDTO;
 import com.omnedu.timer_service.dto.TimerResponseDTO;
 import com.omnedu.timer_service.exception.TimerNotFoundException;
 import com.omnedu.timer_service.model.Timer;
 import com.omnedu.timer_service.repository.TimerRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class TimerService {
 
     private final TimerRepository timerRepository;
+    private final TaskServiceClient taskServiceClient;
 
     public TimerResponseDTO createTimer(TimerRequestDTO request, String userId) {
+        // Validate tasks exist and belong to user
+        if (request.getTaskIds() != null && !request.getTaskIds().isEmpty()) {
+            List<TaskDTO> tasks = taskServiceClient.getTasksByIds(request.getTaskIds(), userId);
+            if (tasks.size() != request.getTaskIds().size()) {
+                throw new IllegalArgumentException("One or more tasks not found or don't belong to user");
+            }
+        }
+
         Timer timer = new Timer();
+        timer.setUserId(userId);
+        timer.setTitle(request.getTitle());
+        timer.setTimerType(request.getTimerType());
+        
+        if (request.getTaskIds() != null && !request.getTaskIds().isEmpty()) {
+            timer.setTaskIds(String.join(",", request.getTaskIds().stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.toList())));
+        }
+
+        
         timer.setUserId(userId);
         timer.setTitle(request.getTitle());
         timer.setTimerType(request.getTimerType());
@@ -216,6 +241,13 @@ public class TimerService {
             }
         }
 
+        // Add task IDs to response
+        if (timer.getTaskIds() != null && !timer.getTaskIds().isEmpty()) {
+            dto.setTaskIds(Arrays.stream(timer.getTaskIds().split(","))
+                    .map(Long::valueOf)
+                    .collect(Collectors.toList()));
+        }
+
         return dto;
     }
 
@@ -231,5 +263,13 @@ public class TimerService {
         timerRepository.delete(timer);
 
         
+    }
+
+    // Add this new method
+    public List<TimerResponseDTO> getTimersForTask(Long taskId, String userId) {
+        return timerRepository.findByUserIdAndTaskIdsContaining(userId, taskId.toString()).stream()
+                .map(this::updateRemainingTime)
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 }

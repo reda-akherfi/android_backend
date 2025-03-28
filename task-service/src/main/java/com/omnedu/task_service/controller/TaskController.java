@@ -70,6 +70,13 @@ public class TaskController {
         taskService.deleteTask(id, userId);
     }
 
+    @GetMapping("/batch")
+    public List<TaskResponseDTO> getTasksByIds(
+            @RequestParam List<Long> ids,
+            @RequestHeader("X-User-Id") String userId) {
+        return taskService.getTasksByIds(ids, userId);
+    }
+
     private String getUserIdFromRequest() {
         return request.getHeader("X-User-Id");
     }
