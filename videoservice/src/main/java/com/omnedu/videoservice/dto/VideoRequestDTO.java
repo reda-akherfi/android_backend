@@ -1,14 +1,17 @@
-// VideoRequestDTO.java
 package com.omnedu.videoservice.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class VideoRequestDTO {
+    @NotBlank(message = "Title is required")
     private String title;
+    
+    @NotBlank(message = "URL is required")
     private String url;
+    
+    private List<Long> taskIds;
 }

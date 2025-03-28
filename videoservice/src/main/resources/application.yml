@@ -18,3 +18,19 @@ logging:
     org.springframework.web: DEBUG
 jwt:
     secret: sVRs1xcOZIMjT1ArjTkpfurGNxgeTJV2uJXU1iEB0LrW2fB5k0kfKDG0/AR66ksVpmwHzll4+c4fYw+TuuU67A==
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+  hystrix:
+    enabled: false # If not using Hystrix
+  request:
+    interceptor:
+      enabled: true
+task:
+  service:
+    url: http://localhost:8086 # This should match your gateway route to task service
