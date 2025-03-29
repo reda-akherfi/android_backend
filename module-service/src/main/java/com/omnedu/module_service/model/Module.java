@@ -7,12 +7,17 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "modules")
+@Table(name = "modules", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "userId"}) // Unique name per user
+})
 public class Module {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
     private String description;
 
     @ElementCollection
