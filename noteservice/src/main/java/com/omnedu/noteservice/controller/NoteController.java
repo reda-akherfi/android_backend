@@ -29,6 +29,12 @@ public class NoteController {
         return noteService.getNoteByIdAndUserId(id, userId);
     }
 
+    @GetMapping("/task/{taskId}")
+    public List<NoteResponseDTO> getNotesForTask(@PathVariable Long taskId) {
+        String userId = (String) request.getAttribute("X-User-Id");
+        return noteService.getNotesForTask(taskId, userId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public NoteResponseDTO createNote(@RequestBody NoteRequestDTO noteRequestDTO) {

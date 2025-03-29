@@ -4,6 +4,7 @@ import com.omnedu.noteservice.model.Note;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class NoteDTO {
@@ -12,6 +13,7 @@ public class NoteDTO {
     private String content;
     private String userId;
     private LocalDateTime createdAt;
+    private List<Long> taskIds;
 
     // Constructor to convert Entity to DTO
     public NoteDTO(Note note) {

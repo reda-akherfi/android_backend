@@ -17,6 +17,9 @@ public class Note {
     @Column(name = "user_id", nullable = false)
     private String userId;
 
+    @Column(name = "task_ids")
+    private String taskIds; // Comma-separated list of task IDs
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
