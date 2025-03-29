@@ -41,6 +41,12 @@ spring:
           predicates:
             - Path=/api/tasks/**
 
+        # modules Service - Protected Routes
+        - id: modules-service
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/modules/**
+
 
 
 

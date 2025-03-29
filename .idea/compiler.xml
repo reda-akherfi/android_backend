@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Annotation profile for noteservice" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="noteservice" />
+        <module name="document-service" />
+        <module name="videoservice" />
+      </profile>
+      <profile name="Annotation profile for module-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="auth-service" />
+        <module name="configuration-service" />
+        <module name="statistics-service" />
+        <module name="dashboard-service" />
+        <module name="module-service" />
+        <module name="timer-service" />
+        <module name="task-service" />
+        <module name="ai-chatbot-service" />
+        <module name="notification-service" />
+        <module name="gateway" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ai-chatbot-service" options="-parameters" />
+      <module name="auth-service" options="-parameters" />
+      <module name="configuration-service" options="-parameters" />
+      <module name="dashboard-service" options="-parameters" />
+      <module name="document-service" options="-parameters" />
+      <module name="gateway" options="-parameters" />
+      <module name="module-service" options="-parameters" />
+      <module name="noteservice" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
+      <module name="statistics-service" options="-parameters" />
+      <module name="task-service" options="-parameters" />
+      <module name="timer-service" options="-parameters" />
+      <module name="videoservice" options="-parameters" />
+    </option>
+  </component>
+</project>

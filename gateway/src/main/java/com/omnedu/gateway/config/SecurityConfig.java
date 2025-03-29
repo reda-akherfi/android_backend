@@ -19,7 +19,7 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(exchange -> exchange
                 .pathMatchers("/api/auth/register", "/api/auth/login", "/api/auth/verify").permitAll()
                 .pathMatchers("/actuator/**").permitAll()  // Allow actuator routes without authentication
@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .pathMatchers("/api/documents/**").permitAll()  // Require authentication for document service
                 .pathMatchers("/api/timer/**").permitAll()  // Require authentication for timer service
                 .pathMatchers("/api/tasks/**").permitAll()  // Require authentication for tasks service
+                .pathMatchers("/api/modules/**").permitAll()  // Require authentication for modules service
                 .anyExchange().authenticated()
             );
         return http.build();
