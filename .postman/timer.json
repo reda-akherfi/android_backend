@@ -1,0 +1,651 @@
+{
+  "info": {
+    "_postman_id": "d1e2f3g4-h5i6-7890-j1k2-l3m4n5o6p7q8",
+    "name": "Timer Service Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Work Timer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"timerType\": \"POMODORO\",\n    \"durationSeconds\": 1500,\n    \"taskIds\": [1, 2],\n    \"title\": \"Coding Session\",\n    \"isBreak\": false\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/timer",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function() {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response.timerType).to.equal('POMODORO');",
+              "    pm.expect(response.durationSeconds).to.equal(1500);",
+              "    pm.expect(response.taskIds).to.eql([1, 2]);",
+              "    pm.expect(response.isBreak).to.be.false;",
+              "    pm.expect(response.status).to.equal('RUNNING');",
+              "    ",
+              "    // Store timer ID for later use",
+              "    pm.environment.set(\"work_timer_id\", response.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Break Timer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"timerType\": \"COUNTDOWN\",\n    \"durationSeconds\": 300,\n    \"title\": \"Short Break\",\n    \"isBreak\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/timer",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function() {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has break timer fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response.isBreak).to.be.true;",
+              "    pm.expect(response.durationSeconds).to.equal(300);",
+              "    ",
+              "    // Store break timer ID for later use",
+              "    pm.environment.set(\"break_timer_id\", response.id);",
+              "    pm.environment.set(\"task_id_for_timers\", 1);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get All User Timers",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains created timers\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').that.has.lengthOf.at.least(2);",
+              "    ",
+              "    const timerIds = response.map(timer => timer.id);",
+              "    pm.expect(timerIds).to.include(pm.environment.get(\"work_timer_id\"));",
+              "    pm.expect(timerIds).to.include(pm.environment.get(\"break_timer_id\"));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Active Timers",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/active",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "active"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains only active timers\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array');",
+              "    response.forEach(timer => {",
+              "        pm.expect(timer.isCompleted).to.be.false;",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Break Timers",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/breaks",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "breaks"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains only break timers\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array');",
+              "    response.forEach(timer => {",
+              "        pm.expect(timer.isBreak).to.be.true;",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Timer by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/{{work_timer_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "{{work_timer_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response matches expected timer\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.id).to.equal(pm.environment.get(\"work_timer_id\"));",
+              "    pm.expect(response.timerType).to.equal('POMODORO');",
+              "    pm.expect(response.isBreak).to.be.false;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Timers for Task",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/task/{{task_id_for_timers}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "task", "{{task_id_for_timers}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains timers for specified task\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').that.is.not.empty;",
+              "    response.forEach(timer => {",
+              "        pm.expect(timer.taskIds).to.include(Number(pm.environment.get(\"task_id_for_timers\")));",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pause Timer",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/{{work_timer_id}}/pause",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "{{work_timer_id}}", "pause"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Timer is paused\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.isPaused).to.be.true;",
+              "    pm.expect(response.status).to.equal('PAUSED');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resume Timer",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/{{work_timer_id}}/resume",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "{{work_timer_id}}", "resume"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Timer is resumed\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.isPaused).to.be.false;",
+              "    pm.expect(response.status).to.equal('RUNNING');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stop Timer",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/{{work_timer_id}}/stop",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "{{work_timer_id}}", "stop"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Timer is stopped\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.isCompleted).to.be.true;",
+              "    pm.expect(response.status).to.equal('COMPLETED');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Timer",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/{{break_timer_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "{{break_timer_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function() {",
+              "    pm.response.to.have.status(204);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Create Timer Without Type",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"durationSeconds\": 300,\n    \"title\": \"Invalid Timer\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/timer",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function() {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Get Non-Existent Timer",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/999999",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "999999"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function() {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Pause Completed Timer",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/timer/{{work_timer_id}}/pause",
+          "host": ["{{base_url}}"],
+          "path": ["api", "timer", "{{work_timer_id}}", "pause"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function() {",
+              "    // This assumes the timer was stopped in a previous test",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwt_token",
+      "value": "your_jwt_token_here"
+    },
+    {
+      "key": "user_id",
+      "value": "test_user_id"
+    }
+  ]
+}

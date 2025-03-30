@@ -1,0 +1,491 @@
+{
+  "info": {
+    "_postman_id": "c1d2e3f4-g5h6-7890-i1j2-k3l4m5n6o7p8",
+    "name": "Video Service Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Video 1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Introduction to Spring Boot\",\n    \"url\": \"https://example.com/videos/spring-boot-intro\",\n    \"taskIds\": [1, 2]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/videos",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function() {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response.title).to.equal('Introduction to Spring Boot');",
+              "    pm.expect(response.url).to.equal('https://example.com/videos/spring-boot-intro');",
+              "    pm.expect(response.taskIds).to.eql([1, 2]);",
+              "    ",
+              "    // Store video ID for later use",
+              "    pm.environment.set(\"video_1_id\", response.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Video 2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"REST API Design\",\n    \"url\": \"https://example.com/videos/rest-api-design\",\n    \"taskIds\": [3]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/videos",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function() {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response.title).to.equal('REST API Design');",
+              "    pm.expect(response.taskIds).to.eql([3]);",
+              "    ",
+              "    // Store video ID for later use",
+              "    pm.environment.set(\"video_2_id\", response.id);",
+              "    pm.environment.set(\"task_id_for_videos\", 3);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get All User Videos",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/videos",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains created videos\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').that.has.lengthOf.at.least(2);",
+              "    ",
+              "    const videoTitles = response.map(video => video.title);",
+              "    pm.expect(videoTitles).to.include('Introduction to Spring Boot');",
+              "    pm.expect(videoTitles).to.include('REST API Design');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Video by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_1_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_1_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response matches expected video\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.id).to.equal(pm.environment.get(\"video_1_id\"));",
+              "    pm.expect(response.title).to.equal('Introduction to Spring Boot');",
+              "    pm.expect(response.taskIds).to.eql([1, 2]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Videos for Task",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/videos/task/{{task_id_for_videos}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "task", "{{task_id_for_videos}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains videos for specified task\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').that.is.not.empty;",
+              "    response.forEach(video => {",
+              "        pm.expect(video.taskIds).to.include(Number(pm.environment.get(\"task_id_for_videos\")));",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update Video 1",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Introduction to Spring Boot (Updated)\",\n    \"url\": \"https://example.com/videos/spring-boot-intro-updated\",\n    \"taskIds\": [1, 2, 4]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_1_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_1_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Video was updated correctly\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.title).to.equal('Introduction to Spring Boot (Updated)');",
+              "    pm.expect(response.url).to.equal('https://example.com/videos/spring-boot-intro-updated');",
+              "    pm.expect(response.taskIds).to.eql([1, 2, 4]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Video 2",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_2_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_2_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function() {",
+              "    pm.response.to.have.status(204);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Create Video Without Title",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"url\": \"https://example.com/videos/invalid\",\n    \"taskIds\": [5]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/videos",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function() {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Get Non-Existent Video",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/videos/999999",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "999999"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function() {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Update Without Required Fields",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"taskIds\": [1, 2]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_1_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_1_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function() {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwt_token",
+      "value": "your_jwt_token_here"
+    },
+    {
+      "key": "user_id",
+      "value": "test_user_id"
+    }
+  ]
+}

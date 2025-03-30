@@ -1,0 +1,550 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-f1g2-h3i4j5k6l7m8",
+    "name": "Module Service Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Module 1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Introduction to Programming\",\n    \"description\": \"Basic programming concepts\",\n    \"taskIds\": [1, 2, 3]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/modules",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response).to.have.property('name', 'Introduction to Programming');",
+              "    pm.expect(response).to.have.property('description', 'Basic programming concepts');",
+              "    pm.expect(response.taskIds).to.eql([1, 2, 3]);",
+              "    ",
+              "    // Store module ID for later use",
+              "    pm.environment.set(\"module_1_id\", response.id);",
+              "    pm.environment.set(\"module_1_name\", response.name);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Module 2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Data Structures\",\n    \"description\": \"Common data structures\",\n    \"taskIds\": [4, 5, 6]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/modules",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response).to.have.property('name', 'Data Structures');",
+              "    pm.expect(response).to.have.property('description', 'Common data structures');",
+              "    pm.expect(response.taskIds).to.eql([4, 5, 6]);",
+              "    ",
+              "    // Store module ID for later use",
+              "    pm.environment.set(\"module_2_id\", response.id);",
+              "    pm.environment.set(\"module_2_name\", response.name);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Module 3",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Algorithms\",\n    \"description\": \"Basic algorithms\",\n    \"taskIds\": [7, 8, 9]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/modules",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response).to.have.property('name', 'Algorithms');",
+              "    pm.expect(response).to.have.property('description', 'Basic algorithms');",
+              "    pm.expect(response.taskIds).to.eql([7, 8, 9]);",
+              "    ",
+              "    // Store module name in environment for later use",
+              "    pm.environment.set(\"module_name_to_get\", response.name);",
+              "    pm.environment.set(\"module_3_id\", response.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get All Modules",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/modules",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains created modules\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').that.has.lengthOf.at.least(3);",
+              "    ",
+              "    const moduleNames = response.map(module => module.name);",
+              "    pm.expect(moduleNames).to.include('Introduction to Programming');",
+              "    pm.expect(moduleNames).to.include('Data Structures');",
+              "    pm.expect(moduleNames).to.include('Algorithms');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Module by Name",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/modules/{{module_name_to_get}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules", "{{module_name_to_get}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response matches expected module\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.name).to.equal(pm.environment.get(\"module_name_to_get\"));",
+              "    pm.expect(response.description).to.equal('Basic algorithms');",
+              "    pm.expect(response.taskIds).to.eql([7, 8, 9]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update Module 1",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Intro to Programming (Updated)\",\n    \"description\": \"Updated basic programming concepts\",\n    \"taskIds\": [1, 2, 3, 10]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/modules/{{module_1_name}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules", "{{module_1_name}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Module was updated correctly\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.name).to.equal('Intro to Programming (Updated)');",
+              "    pm.expect(response.description).to.equal('Updated basic programming concepts');",
+              "    pm.expect(response.taskIds).to.eql([1, 2, 3, 10]);",
+              "    ",
+              "    // Update environment variable with new name",
+              "    pm.environment.set(\"module_1_name\", response.name);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update Module 2",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Advanced Data Structures\",\n    \"description\": \"Updated description\",\n    \"taskIds\": [4, 5, 6, 11]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/modules/{{module_2_name}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules", "{{module_2_name}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Module was updated correctly\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.name).to.equal('Advanced Data Structures');",
+              "    pm.expect(response.description).to.equal('Updated description');",
+              "    pm.expect(response.taskIds).to.eql([4, 5, 6, 11]);",
+              "    ",
+              "    // Update environment variable with new name",
+              "    pm.environment.set(\"module_2_name\", response.name);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Module 4 (for deletion)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Temporary Module\",\n    \"description\": \"This will be deleted\",\n    \"taskIds\": [12]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/modules",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response).to.have.property('name', 'Temporary Module');",
+              "    pm.expect(response).to.have.property('description', 'This will be deleted');",
+              "    pm.expect(response.taskIds).to.eql([12]);",
+              "    ",
+              "    // Store module name for deletion",
+              "    pm.environment.set(\"module_to_delete_name\", response.name);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Module 4",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/modules/{{module_to_delete_name}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules", "{{module_to_delete_name}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function() {",
+              "    pm.response.to.have.status(204);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Create Module Without Name",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"description\": \"Module without name\",\n    \"taskIds\": [13]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/modules",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function() {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Get Non-Existent Module",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/modules/non-existent-module",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules", "non-existent-module"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function() {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Unauthorized Access",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer invalid_token",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/modules",
+          "host": ["{{base_url}}"],
+          "path": ["api", "modules"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 401\", function() {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwt_token",
+      "value": "your_jwt_token_here"
+    }
+  ]
+}

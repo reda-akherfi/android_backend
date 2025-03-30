@@ -1,0 +1,622 @@
+{
+  "info": {
+    "_postman_id": "b1c2d3e4-f5g6-7890-h1i2-j3k4l5m6n7o8",
+    "name": "Task Service Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Task 1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Complete API Documentation\",\n    \"description\": \"Write comprehensive documentation for all endpoints\",\n    \"status\": \"TODO\",\n    \"priority\": \"HIGH\",\n    \"dueDate\": \"2023-12-31T23:59:59\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tasks",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function() {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response.title).to.equal('Complete API Documentation');",
+              "    pm.expect(response.status).to.equal('TODO');",
+              "    pm.expect(response.priority).to.equal('HIGH');",
+              "    ",
+              "    // Store task ID for later use",
+              "    pm.environment.set(\"task_1_id\", response.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Task 2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Review Pull Requests\",\n    \"description\": \"Review all open pull requests in the repo\",\n    \"status\": \"IN_PROGRESS\",\n    \"priority\": \"MEDIUM\",\n    \"dueDate\": \"2023-12-15T18:00:00\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tasks",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function() {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response.title).to.equal('Review Pull Requests');",
+              "    pm.expect(response.status).to.equal('IN_PROGRESS');",
+              "    ",
+              "    // Store task ID for later use",
+              "    pm.environment.set(\"task_2_id\", response.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Task 3",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Write Unit Tests\",\n    \"description\": \"Cover all critical paths with unit tests\",\n    \"status\": \"TODO\",\n    \"priority\": \"LOW\",\n    \"dueDate\": \"2023-12-20T12:00:00\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tasks",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function() {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has all required fields\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('id');",
+              "    pm.expect(response.title).to.equal('Write Unit Tests');",
+              "    pm.expect(response.priority).to.equal('LOW');",
+              "    ",
+              "    // Store task ID for later use",
+              "    pm.environment.set(\"task_3_id\", response.id);",
+              "    pm.environment.set(\"task_status_to_filter\", response.status);",
+              "    pm.environment.set(\"task_priority_to_filter\", response.priority);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get All Tasks",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tasks",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains created tasks\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').that.has.lengthOf.at.least(3);",
+              "    ",
+              "    const taskTitles = response.map(task => task.title);",
+              "    pm.expect(taskTitles).to.include('Complete API Documentation');",
+              "    pm.expect(taskTitles).to.include('Review Pull Requests');",
+              "    pm.expect(taskTitles).to.include('Write Unit Tests');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Task by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tasks/{{task_1_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "{{task_1_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response matches expected task\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.id).to.equal(pm.environment.get(\"task_1_id\"));",
+              "    pm.expect(response.title).to.equal('Complete API Documentation');",
+              "    pm.expect(response.priority).to.equal('HIGH');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Tasks by Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tasks/status/{{task_status_to_filter}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "status", "{{task_status_to_filter}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains tasks with correct status\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').that.is.not.empty;",
+              "    response.forEach(task => {",
+              "        pm.expect(task.status).to.equal(pm.environment.get(\"task_status_to_filter\"));",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Tasks by Priority",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tasks/priority/{{task_priority_to_filter}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "priority", "{{task_priority_to_filter}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains tasks with correct priority\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').that.is.not.empty;",
+              "    response.forEach(task => {",
+              "        pm.expect(task.priority).to.equal(pm.environment.get(\"task_priority_to_filter\"));",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Overdue Tasks",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tasks/overdue",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "overdue"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is an array\", function() {",
+              "    pm.expect(pm.response.json()).to.be.an('array');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update Task 1",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Complete API Documentation (Updated)\",\n    \"description\": \"Updated description with more details\",\n    \"status\": \"IN_PROGRESS\",\n    \"priority\": \"HIGH\",\n    \"dueDate\": \"2024-01-15T23:59:59\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tasks/{{task_1_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "{{task_1_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Task was updated correctly\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.title).to.equal('Complete API Documentation (Updated)');",
+              "    pm.expect(response.status).to.equal('IN_PROGRESS');",
+              "    pm.expect(response.dueDate).to.equal('2024-01-15T23:59:59');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Batch Get Tasks",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{user_id}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tasks/batch?ids={{task_1_id}},{{task_2_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "batch"],
+          "query": [
+            {
+              "key": "ids",
+              "value": "{{task_1_id}},{{task_2_id}}"
+            }
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains requested tasks\", function() {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an('array').with.lengthOf(2);",
+              "    ",
+              "    const taskIds = response.map(task => task.id);",
+              "    pm.expect(taskIds).to.include(pm.environment.get(\"task_1_id\"));",
+              "    pm.expect(taskIds).to.include(pm.environment.get(\"task_2_id\"));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Task 3",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tasks/{{task_3_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "{{task_3_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function() {",
+              "    pm.response.to.have.status(204);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Create Task with Invalid Due Date",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Invalid Task\",\n    \"description\": \"This should fail\",\n    \"status\": \"TODO\",\n    \"priority\": \"LOW\",\n    \"dueDate\": \"2020-01-01T00:00:00\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tasks",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function() {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Get Non-Existent Task",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tasks/999999",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "999999"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function() {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Test - Update Without Required Fields",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"description\": \"Only description provided\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tasks/{{task_1_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "{{task_1_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function() {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwt_token",
+      "value": "your_jwt_token_here"
+    },
+    {
+      "key": "user_id",
+      "value": "test_user_id"
+    }
+  ]
+}
