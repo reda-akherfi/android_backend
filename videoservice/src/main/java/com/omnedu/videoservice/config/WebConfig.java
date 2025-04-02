@@ -16,4 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtAuthInterceptor)
                 .addPathPatterns("/api/videos/**");
     }
+    
+    // Gateway is handling CORS, so we don't need to configure it here
+    // to avoid duplicate Access-Control-Allow-Origin headers
 }

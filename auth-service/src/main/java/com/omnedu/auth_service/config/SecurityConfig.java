@@ -50,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS configuration
+            .cors(cors -> cors.disable()) // Disable CORS as it's handled by the gateway
             .csrf(csrf -> csrf.disable()) // Disable CSRF protection
             .exceptionHandling(exceptionHandling -> exceptionHandling
                 .authenticationEntryPoint(unauthorizedHandler)) // Handle unauthorized requests
@@ -64,18 +64,5 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Define CORS configuration to allow requests from your React app
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Adjust based on your React app's URL
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+    // No need for CORS configuration source as it's handled by the gateway
 }

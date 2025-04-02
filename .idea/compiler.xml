@@ -3,7 +3,18 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for module-service" enabled="true">
+      <profile name="Annotation profile for task-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="task-service" />
+        <module name="auth-service" />
+        <module name="gateway" />
+      </profile>
+      <profile name="Annotation profile for timer-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -12,22 +23,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="module-service" />
-      </profile>
-      <profile name="Annotation profile for timer-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
-        </processorPath>
-        <module name="auth-service" />
-        <module name="statistics-service" />
-        <module name="configuration-service" />
         <module name="timer-service" />
-        <module name="task-service" />
-        <module name="ai-chatbot-service" />
-        <module name="notification-service" />
-        <module name="gateway" />
       </profile>
       <profile name="Annotation profile for videoservice" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -42,7 +38,11 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="ai-chatbot-service" target="21" />
+      <module name="configuration-service" target="21" />
       <module name="dashboard-service" target="21" />
+      <module name="notification-service" target="21" />
+      <module name="statistics-service" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

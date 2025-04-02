@@ -14,6 +14,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtAuthInterceptor)
-                .addPathPatterns("/api/notes/**");
+                .addPathPatterns("/api/timer/**");
     }
+    
+    // Gateway is handling CORS, so we don't need to configure it here
+    // to avoid duplicate Access-Control-Allow-Origin headers
 }
